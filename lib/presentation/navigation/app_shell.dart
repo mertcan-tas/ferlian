@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,15 @@ class AppShell extends StatelessWidget {
     ProfileScreen(),
   ];
 
+  Widget _buildNavIcon(String assetName, Color color) {
+    return SvgPicture.asset(
+      'assets/icons/$assetName',
+      width: 24,
+      height: 24,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+    );
+  }
+
   List<PersistentBottomNavBarItem> _navBarItems(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -30,47 +40,51 @@ class AppShell extends StatelessWidget {
 
     return [
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home_outlined),
-        title: 'Ana Sayfa',
+        icon: _buildNavIcon('compass.svg', colorScheme.primary),
+        inactiveIcon: _buildNavIcon('compass.svg', inactiveColor),
+        title: 'Discover',
         activeColorPrimary: colorScheme.primary,
         activeColorSecondary: Colors.white,
         inactiveColorPrimary: inactiveColor,
         inactiveColorSecondary: inactiveColor,
         textStyle: labelStyle,
-        iconSize: 22,
+        iconSize: 24,
         contentPadding: 0,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.search_rounded),
-        title: 'Keşfet',
+        icon: _buildNavIcon('heart.svg', colorScheme.primary),
+        inactiveIcon: _buildNavIcon('heart.svg', inactiveColor),
+        title: 'Matches',
         activeColorPrimary: colorScheme.primary,
         activeColorSecondary: Colors.white,
         inactiveColorPrimary: inactiveColor,
         inactiveColorSecondary: inactiveColor,
         textStyle: labelStyle,
-        iconSize: 22,
+        iconSize: 24,
         contentPadding: 0,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.chat_bubble_outline_rounded),
-        title: 'Mesajlar',
+        icon: _buildNavIcon('chat.svg', colorScheme.primary),
+        inactiveIcon: _buildNavIcon('chat.svg', inactiveColor),
+        title: 'Chat',
         activeColorPrimary: colorScheme.primary,
         activeColorSecondary: Colors.white,
         inactiveColorPrimary: inactiveColor,
         inactiveColorSecondary: inactiveColor,
         textStyle: labelStyle,
-        iconSize: 22,
+        iconSize: 24,
         contentPadding: 0,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.person_outline),
-        title: 'Profil',
+        icon: _buildNavIcon('user.svg', colorScheme.primary),
+        inactiveIcon: _buildNavIcon('user.svg', inactiveColor),
+        title: 'Profile',
         activeColorPrimary: colorScheme.primary,
         activeColorSecondary: Colors.white,
         inactiveColorPrimary: inactiveColor,
         inactiveColorSecondary: inactiveColor,
         textStyle: labelStyle,
-        iconSize: 22,
+        iconSize: 24,
         contentPadding: 0,
       ),
     ];
