@@ -1,0 +1,15 @@
+{
+  "@@locale": "tr",
+  "homeTitle": "Ana Sayfa",
+  "homeSubtitle": "Uygulamanın ana sekmesine hoş geldin.",
+  "exploreTitle": "Keşfet",
+  "exploreSubtitle": "Yeni içerikleri ve fırsatları burada bulabilirsin.",
+  "messagesTitle": "Mesajlar",
+  "messagesSubtitle": "Arkadaşlarınla iletişim kurmak için mesajlarını kontrol et.",
+  "profileTitle": "Profil",
+  "profileSubtitle": "Kişisel bilgilerini düzenlemek için bu sayfayı kullan.",
+  "navDiscover": "Keşfet",
+  "navMatches": "Eşleşmeler",
+  "navChat": "Sohbet",
+  "navProfile": "Profil"
+}

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ferlian/l10n/app_localizations.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -19,12 +21,12 @@ class ExploreScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Keşfet',
+                l10n.exploreTitle,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 8),
               Text(
-                'Yeni içerikleri ve fırsatları burada bulabilirsin.',
+                l10n.exploreSubtitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ferlian/l10n/app_localizations.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -19,12 +21,12 @@ class MessagesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Mesajlar',
+                l10n.messagesTitle,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 8),
               Text(
-                'Arkadaşlarınla iletişim kurmak için mesajlarını kontrol et.',
+                l10n.messagesSubtitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),

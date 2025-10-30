@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ferlian/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -33,6 +35,14 @@ class MyApp extends StatelessWidget {
         title: 'Ferlian',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
+        locale: const Locale('tr'),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         home: const AppShell(),
       ),
     );

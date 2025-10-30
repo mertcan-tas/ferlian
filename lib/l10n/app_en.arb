@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "homeTitle": "Home",
+  "homeSubtitle": "Welcome to the main section of the app.",
+  "exploreTitle": "Discover",
+  "exploreSubtitle": "Find new content and opportunities here.",
+  "messagesTitle": "Messages",
+  "messagesSubtitle": "Check your messages to stay in touch with friends.",
+  "profileTitle": "Profile",
+  "profileSubtitle": "Use this page to edit your personal information.",
+  "navDiscover": "Discover",
+  "navMatches": "Matches",
+  "navChat": "Chat",
+  "navProfile": "Profile"
+}

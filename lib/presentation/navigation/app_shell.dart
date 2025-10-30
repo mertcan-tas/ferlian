@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:ferlian/l10n/app_localizations.dart';
 
 import '../providers/bottom_nav_provider.dart';
 import '../screens/explore/explore_screen.dart';
@@ -36,6 +37,7 @@ class AppShell extends StatelessWidget {
       fontWeight: FontWeight.w600,
       letterSpacing: 0.2,
     );
+    final l10n = AppLocalizations.of(context)!;
 
     PersistentBottomNavBarItem buildItem({
       required String assetName,
@@ -56,10 +58,10 @@ class AppShell extends StatelessWidget {
     }
 
     return [
-      buildItem(assetName: 'compass.svg', title: 'Discover'),
-      buildItem(assetName: 'heart.svg', title: 'Matches'),
-      buildItem(assetName: 'chat.svg', title: 'Chat'),
-      buildItem(assetName: 'user.svg', title: 'Profile'),
+      buildItem(assetName: 'compass.svg', title: l10n.navDiscover),
+      buildItem(assetName: 'heart.svg', title: l10n.navMatches),
+      buildItem(assetName: 'chat.svg', title: l10n.navChat),
+      buildItem(assetName: 'user.svg', title: l10n.navProfile),
     ];
   }
 

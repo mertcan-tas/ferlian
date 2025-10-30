@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ferlian/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -19,12 +21,12 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Profil',
+                l10n.profileTitle,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 8),
               Text(
-                'Kişisel bilgilerini düzenlemek için bu sayfayı kullan.',
+                l10n.profileSubtitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
