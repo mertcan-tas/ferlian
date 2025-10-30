@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/config/supabase_config.dart';
+import 'core/theme/app_theme.dart';
 import 'presentation/navigation/app_shell.dart';
 import 'presentation/providers/bottom_nav_provider.dart';
 
@@ -23,9 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<SupabaseClient>(
-          create: (_) => Supabase.instance.client,
-        ),
+        Provider<SupabaseClient>(create: (_) => Supabase.instance.client),
         ChangeNotifierProvider<BottomNavProvider>(
           create: (_) => BottomNavProvider(),
         ),
@@ -33,11 +32,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Ferlian',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0066FF)),
-          useMaterial3: true,
-          scaffoldBackgroundColor: Colors.white,
-        ),
+        theme: AppTheme.lightTheme,
         home: const AppShell(),
       ),
     );

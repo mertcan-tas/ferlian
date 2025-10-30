@@ -10,6 +10,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,

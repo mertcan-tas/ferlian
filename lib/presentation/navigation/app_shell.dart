@@ -31,62 +31,35 @@ class AppShell extends StatelessWidget {
   List<PersistentBottomNavBarItem> _navBarItems(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final inactiveColor =
-        colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
+    final inactiveColor = colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
     final labelStyle = theme.textTheme.labelSmall?.copyWith(
       fontWeight: FontWeight.w600,
       letterSpacing: 0.2,
     );
 
+    PersistentBottomNavBarItem buildItem({
+      required String assetName,
+      required String title,
+    }) {
+      return PersistentBottomNavBarItem(
+        icon: _buildNavIcon(assetName, colorScheme.primary),
+        inactiveIcon: _buildNavIcon(assetName, inactiveColor),
+        title: title,
+        activeColorPrimary: colorScheme.primary,
+        activeColorSecondary: colorScheme.primary,
+        inactiveColorPrimary: inactiveColor,
+        inactiveColorSecondary: inactiveColor,
+        textStyle: labelStyle,
+        iconSize: 24,
+        contentPadding: 0,
+      );
+    }
+
     return [
-      PersistentBottomNavBarItem(
-        icon: _buildNavIcon('compass.svg', colorScheme.primary),
-        inactiveIcon: _buildNavIcon('compass.svg', inactiveColor),
-        title: 'Discover',
-        activeColorPrimary: colorScheme.primary,
-        activeColorSecondary: Colors.white,
-        inactiveColorPrimary: inactiveColor,
-        inactiveColorSecondary: inactiveColor,
-        textStyle: labelStyle,
-        iconSize: 24,
-        contentPadding: 0,
-      ),
-      PersistentBottomNavBarItem(
-        icon: _buildNavIcon('heart.svg', colorScheme.primary),
-        inactiveIcon: _buildNavIcon('heart.svg', inactiveColor),
-        title: 'Matches',
-        activeColorPrimary: colorScheme.primary,
-        activeColorSecondary: Colors.white,
-        inactiveColorPrimary: inactiveColor,
-        inactiveColorSecondary: inactiveColor,
-        textStyle: labelStyle,
-        iconSize: 24,
-        contentPadding: 0,
-      ),
-      PersistentBottomNavBarItem(
-        icon: _buildNavIcon('chat.svg', colorScheme.primary),
-        inactiveIcon: _buildNavIcon('chat.svg', inactiveColor),
-        title: 'Chat',
-        activeColorPrimary: colorScheme.primary,
-        activeColorSecondary: Colors.white,
-        inactiveColorPrimary: inactiveColor,
-        inactiveColorSecondary: inactiveColor,
-        textStyle: labelStyle,
-        iconSize: 24,
-        contentPadding: 0,
-      ),
-      PersistentBottomNavBarItem(
-        icon: _buildNavIcon('user.svg', colorScheme.primary),
-        inactiveIcon: _buildNavIcon('user.svg', inactiveColor),
-        title: 'Profile',
-        activeColorPrimary: colorScheme.primary,
-        activeColorSecondary: Colors.white,
-        inactiveColorPrimary: inactiveColor,
-        inactiveColorSecondary: inactiveColor,
-        textStyle: labelStyle,
-        iconSize: 24,
-        contentPadding: 0,
-      ),
+      buildItem(assetName: 'compass.svg', title: 'Discover'),
+      buildItem(assetName: 'heart.svg', title: 'Matches'),
+      buildItem(assetName: 'chat.svg', title: 'Chat'),
+      buildItem(assetName: 'user.svg', title: 'Profile'),
     ];
   }
 
@@ -100,7 +73,9 @@ class AppShell extends StatelessWidget {
           screens: _screens,
           items: _navBarItems(context),
           onItemSelected: navigation.onItemTapped,
-          navBarStyle: NavBarStyle.style7,
+          navBarStyle: NavBarStyle.style9,
+          navBarHeight: 58,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
           backgroundColor: Theme.of(context).colorScheme.surface,
           decoration: NavBarDecoration(
@@ -120,7 +95,8 @@ class AppShell extends StatelessWidget {
               animateTabTransition: true,
               curve: Curves.easeInOut,
               duration: Duration(milliseconds: 250),
-              screenTransitionAnimationType: ScreenTransitionAnimationType.fadeIn,
+              screenTransitionAnimationType:
+                  ScreenTransitionAnimationType.fadeIn,
             ),
           ),
           resizeToAvoidBottomInset: true,
