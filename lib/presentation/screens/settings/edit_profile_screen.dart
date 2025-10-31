@@ -86,9 +86,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              // NOTE: Persist profile data via Supabase once API is ready.
-              Navigator.of(context).pop();
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+              final authProvider = context.read<AuthProvider>();
+              final name = _nameController.text.trim();
+              final email = _emailController.text.trim();
+
+              await authProvider.updateCachedProfile(
+                fullName: name.isEmpty ? null : name,
+                email: email.isEmpty ? null : email,
+              );
+
+              if (!mounted) return;
+              navigator.pop();
             },
             child: const Text('Kaydet'),
           ),

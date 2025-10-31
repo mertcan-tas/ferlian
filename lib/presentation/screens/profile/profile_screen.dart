@@ -26,11 +26,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SafeArea(
         child: Consumer<AuthProvider>(
           builder: (context, auth, _) {
-            final userEmail = auth.session?.user.email ?? '-';
-            final displayName =
-                auth.session?.user.userMetadata?['full_name'] as String?;
+            final cachedProfile = auth.cachedProfile;
+            final cachedName = cachedProfile?.fullName?.trim();
+            final cachedEmail = cachedProfile?.email;
+            final cachedAvatar = cachedProfile?.avatarUrl;
+
+            final sessionEmail = auth.session?.user.email;
+            final sessionMetadata = auth.session?.user.userMetadata;
+
+            final userEmail = (cachedEmail != null && cachedEmail.isNotEmpty)
+                ? cachedEmail
+                : (sessionEmail ?? '-');
+            final metadataName =
+                (sessionMetadata?['full_name'] as String?)?.trim();
+            final displayName = (cachedName != null && cachedName.isNotEmpty)
+                ? cachedName
+                : metadataName;
             final photoUrl =
-                auth.session?.user.userMetadata?['avatar_url'] as String?;
+                (cachedAvatar != null && cachedAvatar.isNotEmpty)
+                    ? cachedAvatar
+                    : (sessionMetadata?['avatar_url'] as String?);
             final userName = (displayName != null && displayName.isNotEmpty)
                 ? displayName
                 : userEmail;

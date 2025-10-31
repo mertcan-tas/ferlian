@@ -3,20 +3,27 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../data/local/profile_local_data_source.dart';
+
 enum AuthStatus { unknown, authenticated, unauthenticated }
 
 class AuthProvider with ChangeNotifier {
-  AuthProvider(this._client) {
+  AuthProvider(
+    this._client, {
+    required ProfileLocalDataSource profileStorage,
+  }) : _profileStorage = profileStorage {
     unawaited(_init());
   }
 
   final SupabaseClient _client;
+  final ProfileLocalDataSource _profileStorage;
   StreamSubscription<AuthState>? _authSubscription;
 
   Session? _session;
   AuthStatus _status = AuthStatus.unknown;
   bool _isBusy = false;
   String? _errorMessage;
+  UserProfileCache? _cachedProfile;
 
   Session? get session => _session;
   AuthStatus get status => _status;
@@ -24,26 +31,27 @@ class AuthProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   bool get isAuthenticated => _status == AuthStatus.authenticated;
+  UserProfileCache? get cachedProfile => _cachedProfile;
 
   void clearError() {
     _setError(null);
   }
 
   Future<void> _init() async {
+    _cachedProfile = _profileStorage.readProfile();
     _session = _client.auth.currentSession;
     _status = _session != null
         ? AuthStatus.authenticated
         : AuthStatus.unauthenticated;
+    if (_session != null) {
+      _cacheSessionProfile(_session!);
+    }
     notifyListeners();
 
-    _authSubscription = _client.auth.onAuthStateChange.listen((data) {
-      final session = data.session;
-      _session = session;
-      _status = session != null
-          ? AuthStatus.authenticated
-          : AuthStatus.unauthenticated;
-      notifyListeners();
-    });
+    _authSubscription =
+        _client.auth.onAuthStateChange.listen((data) => _applySession(
+              data.session,
+            ));
   }
 
   Future<bool> signIn({required String email, required String password}) async {
@@ -76,6 +84,24 @@ class AuthProvider with ChangeNotifier {
   Future<void> signOut() async {
     await _client.auth.signOut();
     _applySession(null);
+  }
+
+  Future<void> updateCachedProfile({
+    String? email,
+    String? fullName,
+    String? avatarUrl,
+  }) async {
+    final currentEmail = email ?? _cachedProfile?.email ?? _session?.user.email;
+    if (currentEmail == null || currentEmail.isEmpty) return;
+
+    final profile = UserProfileCache(
+      email: currentEmail,
+      fullName: fullName ?? _cachedProfile?.fullName,
+      avatarUrl: avatarUrl ?? _cachedProfile?.avatarUrl,
+      updatedAt: DateTime.now(),
+    );
+    _cachedProfile = profile;
+    await _profileStorage.writeProfile(profile);
     notifyListeners();
   }
 
@@ -121,7 +147,28 @@ class AuthProvider with ChangeNotifier {
     _status = session != null
         ? AuthStatus.authenticated
         : AuthStatus.unauthenticated;
+    if (session != null) {
+      _cacheSessionProfile(session);
+    } else {
+      _cachedProfile = null;
+      unawaited(_profileStorage.clear());
+    }
     notifyListeners();
+  }
+
+  void _cacheSessionProfile(Session session) {
+    final user = session.user;
+    final email = user.email;
+    if (email == null || email.isEmpty) return;
+    final metadata = user.userMetadata ?? <String, dynamic>{};
+    final profile = UserProfileCache(
+      email: email,
+      fullName: (metadata['full_name'] as String?)?.trim(),
+      avatarUrl: metadata['avatar_url'] as String?,
+      updatedAt: DateTime.now(),
+    );
+    _cachedProfile = profile;
+    unawaited(_profileStorage.writeProfile(profile));
   }
 
   void _setBusy(bool value) {
