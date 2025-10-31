@@ -1,5 +1,9 @@
-import 'package:ferlian/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+
+import 'package:ferlian/l10n/app_localizations.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+
+import 'detail/chat_detail_screen.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
@@ -164,7 +168,19 @@ class MessagesScreen extends StatelessWidget {
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: ChatDetailScreen(
+                            partnerName: message.name,
+                            partnerAvatar: message.avatarAsset,
+                            lastSeenLabel: message.timeLabel,
+                          ),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
                     );
                   },
                 ),
