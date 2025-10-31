@@ -6,8 +6,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/config/supabase_config.dart';
 import 'core/theme/app_theme.dart';
-import 'presentation/navigation/app_shell.dart';
+import 'presentation/navigation/auth_gate.dart';
 import 'presentation/providers/bottom_nav_provider.dart';
+import 'presentation/providers/auth_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<SupabaseClient>(create: (_) => Supabase.instance.client),
+        ChangeNotifierProvider<AuthProvider>(
+          create: (_) => AuthProvider(Supabase.instance.client),
+        ),
         ChangeNotifierProvider<BottomNavProvider>(
           create: (_) => BottomNavProvider(),
         ),
@@ -43,7 +47,7 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        home: const AppShell(),
+        home: const AuthGate(),
       ),
     );
   }
