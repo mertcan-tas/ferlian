@@ -7,8 +7,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/config/supabase_config.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/navigation/auth_gate.dart';
-import 'presentation/providers/bottom_nav_provider.dart';
-import 'presentation/providers/auth_provider.dart';
+import 'presentation/providers/auth/auth_provider.dart';
+import 'presentation/providers/ui/bottom_nav_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

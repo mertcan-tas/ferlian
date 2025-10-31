@@ -4,7 +4,7 @@ import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:ferlian/l10n/app_localizations.dart';
 
-import '../providers/bottom_nav_provider.dart';
+import '../providers/ui/bottom_nav_provider.dart';
 import '../screens/explore/explore_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/messages/messages_screen.dart';
