@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../data/local/auth_secure_storage.dart';
 import '../../../data/local/profile_local_data_source.dart';
 
 enum AuthStatus { unknown, authenticated, unauthenticated }
@@ -11,12 +13,15 @@ class AuthProvider with ChangeNotifier {
   AuthProvider(
     this._client, {
     required ProfileLocalDataSource profileStorage,
-  }) : _profileStorage = profileStorage {
+    required AuthSecureStorage secureStorage,
+  })  : _profileStorage = profileStorage,
+        _secureStorage = secureStorage {
     unawaited(_init());
   }
 
   final SupabaseClient _client;
   final ProfileLocalDataSource _profileStorage;
+  final AuthSecureStorage _secureStorage;
   StreamSubscription<AuthState>? _authSubscription;
 
   Session? _session;
@@ -39,13 +44,10 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> _init() async {
     _cachedProfile = _profileStorage.readProfile();
-    _session = _client.auth.currentSession;
+    await _restoreSession();
     _status = _session != null
         ? AuthStatus.authenticated
         : AuthStatus.unauthenticated;
-    if (_session != null) {
-      _cacheSessionProfile(_session!);
-    }
     notifyListeners();
 
     _authSubscription =
@@ -142,6 +144,22 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
+  Future<void> _restoreSession() async {
+    _session = _client.auth.currentSession;
+    if (_session != null) {
+      _cacheSessionProfile(_session!);
+      unawaited(_persistSessionSecurely(_session!));
+      return;
+    }
+
+    final storedSession = await _loadStoredSession();
+    if (storedSession == null) return;
+
+    _session = storedSession;
+    _cacheSessionProfile(storedSession);
+    unawaited(_recoverSupabaseSession(storedSession));
+  }
+
   void _applySession(Session? session) {
     _session = session;
     _status = session != null
@@ -149,9 +167,11 @@ class AuthProvider with ChangeNotifier {
         : AuthStatus.unauthenticated;
     if (session != null) {
       _cacheSessionProfile(session);
+      unawaited(_persistSessionSecurely(session));
     } else {
       _cachedProfile = null;
       unawaited(_profileStorage.clear());
+      unawaited(_secureStorage.clearSession());
     }
     notifyListeners();
   }
@@ -169,6 +189,39 @@ class AuthProvider with ChangeNotifier {
     );
     _cachedProfile = profile;
     unawaited(_profileStorage.writeProfile(profile));
+  }
+
+  Future<Session?> _loadStoredSession() async {
+    try {
+      if (!await _secureStorage.hasSession()) return null;
+      final sessionJson = await _secureStorage.readSession();
+      if (sessionJson == null || sessionJson.isEmpty) return null;
+      final dynamic decoded = jsonDecode(sessionJson);
+      if (decoded is! Map<dynamic, dynamic>) return null;
+      final sessionMap = Map<String, dynamic>.from(decoded);
+      return Session.fromJson(sessionMap);
+    } catch (_) {
+      await _secureStorage.clearSession();
+      return null;
+    }
+  }
+
+  Future<void> _persistSessionSecurely(Session session) async {
+    try {
+      final payload = jsonEncode(session.toJson());
+      await _secureStorage.writeSession(payload);
+    } catch (_) {
+      // Ignore storage errors to avoid blocking auth flow.
+    }
+  }
+
+  Future<void> _recoverSupabaseSession(Session session) async {
+    try {
+      final payload = jsonEncode(session.toJson());
+      await _client.auth.recoverSession(payload);
+    } catch (_) {
+      await _secureStorage.clearSession();
+    }
   }
 
   void _setBusy(bool value) {
