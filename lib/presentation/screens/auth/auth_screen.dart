@@ -3,15 +3,25 @@ import 'package:flutter/material.dart';
 import 'widgets/login_form.dart';
 import 'widgets/register_form.dart';
 
+enum AuthMode { login, register }
+
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  const AuthScreen({super.key, this.initialMode = AuthMode.login});
+
+  final AuthMode initialMode;
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  bool _showLogin = true;
+  late bool _showLogin;
+
+  @override
+  void initState() {
+    super.initState();
+    _showLogin = widget.initialMode == AuthMode.login;
+  }
 
   void _toggle() {
     setState(() {
@@ -26,6 +36,23 @@ class _AuthScreenState extends State<AuthScreen> {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        backgroundColor: colorScheme.surface,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () {
+            Navigator.of(context).maybePop();
+          },
+        ),
+        title: Text(
+          _showLogin ? 'Giriş Yap' : 'Kayıt Ol',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -61,10 +88,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 32),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
-                    transitionBuilder: (child, animation) => FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    ),
+                    transitionBuilder: (child, animation) =>
+                        FadeTransition(opacity: animation, child: child),
                     child: _showLogin
                         ? LoginForm(
                             key: const ValueKey('login_form'),

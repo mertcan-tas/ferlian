@@ -5,10 +5,7 @@ import '../../../providers/auth/auth_provider.dart';
 import 'auth_text_field.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({
-    super.key,
-    required this.onRegisterRequested,
-  });
+  const LoginForm({super.key, required this.onRegisterRequested});
 
   final VoidCallback onRegisterRequested;
 
@@ -18,8 +15,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController(text: 'batu.j@azdim.net');
+  final _passwordController = TextEditingController(text: 'Naga_9192#*');
 
   @override
   void dispose() {
@@ -47,11 +44,7 @@ class _LoginFormState extends State<LoginForm> {
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-        ),
-      );
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   String? _validateEmail(String? value) {
@@ -107,9 +100,9 @@ class _LoginFormState extends State<LoginForm> {
               Text(
                 auth.errorMessage!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  color: Theme.of(context).colorScheme.error,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
             const SizedBox(height: 24),
