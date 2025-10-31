@@ -75,7 +75,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         CircleAvatar(
                           radius: 44,
-                          backgroundColor: theme.dividerColor.withOpacity(0.2),
+                          backgroundColor: theme.dividerColor.withValues(
+                            alpha: 0.2,
+                          ),
                           backgroundImage:
                               photoUrl != null && photoUrl.isNotEmpty
                               ? NetworkImage(photoUrl)
@@ -100,7 +102,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: colorScheme.primary.withOpacity(0.25),
+                                  color: colorScheme.primary.withValues(
+                                    alpha: 0.25,
+                                  ),
                                   blurRadius: 14,
                                   offset: const Offset(0, 8),
                                 ),
@@ -135,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: colorScheme.surfaceVariant,
+                            color: colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Row(
@@ -164,8 +168,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          colorScheme.primary.withOpacity(0.9),
-                          colorScheme.primary.withOpacity(0.7),
+                          colorScheme.primary.withValues(alpha: 0.9),
+                          colorScheme.primary.withValues(alpha: 0.7),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -173,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: colorScheme.primary.withOpacity(0.25),
+                          color: colorScheme.primary.withValues(alpha: 0.25),
                           blurRadius: 24,
                           offset: const Offset(0, 12),
                         ),
@@ -197,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Text(
                                 'İlk satın alımında %50 indirim seni bekliyor.',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                 ),
                               ),
                             ],
@@ -229,7 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 30,
                           offset: const Offset(0, 16),
                         ),
@@ -301,7 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               Switch.adaptive(
                                 value: _isDarkMode,
-                                activeColor: colorScheme.primary,
+                                activeTrackColor: colorScheme.primary,
                                 onChanged: (value) {
                                   setState(() {
                                     _isDarkMode = value;
@@ -420,7 +424,7 @@ class _IconBadge extends StatelessWidget {
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(16),
       ),
       alignment: Alignment.center,
@@ -449,7 +453,7 @@ class _ActionIcon extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
+          color: color.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(18),
         ),
         alignment: Alignment.center,

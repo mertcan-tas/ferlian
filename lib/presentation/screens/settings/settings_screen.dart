@@ -50,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor: theme.dividerColor.withOpacity(0.2),
+                    backgroundColor: theme.dividerColor.withValues(alpha: 0.2),
                     backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
                         ? NetworkImage(avatarUrl)
                         : null,
@@ -193,7 +193,7 @@ class _SettingsTile extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.12),
+                  color: colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(icon, color: colorScheme.primary),

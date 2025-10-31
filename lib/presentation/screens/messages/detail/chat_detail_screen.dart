@@ -106,8 +106,8 @@ class _MessageBubble extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     final bubbleColor = isMe
-        ? colorScheme.primary.withOpacity(0.9)
-        : colorScheme.surfaceVariant.withOpacity(0.9);
+        ? colorScheme.primary.withValues(alpha: 0.9)
+        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.9);
     final textColor = isMe ? Colors.white : colorScheme.onSurface;
 
     Widget content;
@@ -191,7 +191,7 @@ class _MessageComposer extends StatelessWidget {
           color: colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 20,
               offset: const Offset(0, -4),
             ),
@@ -202,7 +202,9 @@ class _MessageComposer extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceVariant.withOpacity(0.6),
+                  color: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.6,
+                  ),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: TextField(

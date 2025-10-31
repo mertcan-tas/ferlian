@@ -111,7 +111,9 @@ class MessagesScreen extends StatelessWidget {
               Container(
                 height: 48,
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceVariant.withOpacity(0.6),
+                  color: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.6,
+                  ),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 16),

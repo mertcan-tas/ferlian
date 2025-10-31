@@ -51,7 +51,7 @@ class AuthLandingScreen extends StatelessWidget {
                     'Hayalindeki bağlantıyı keşfetmen için sana rehberlik ediyoruz. '
                     'Sadece birkaç dokunuşla yolculuğuna başla.',
                     style: theme.textTheme.bodyLarge?.copyWith(
-                      color: Colors.white.withOpacity(0.88),
+                      color: Colors.white.withValues(alpha: 0.88),
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -84,9 +84,9 @@ class AuthLandingScreen extends StatelessWidget {
                   OutlinedButton(
                     onPressed: () => _openAuth(context, AuthMode.login),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white.withOpacity(0.88),
+                      foregroundColor: Colors.white.withValues(alpha: 0.88),
                       side: BorderSide(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                         width: 1.2,
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 16),

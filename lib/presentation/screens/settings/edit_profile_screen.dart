@@ -87,7 +87,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              // TODO: Persist profile data
+              // NOTE: Persist profile data via Supabase once API is ready.
               Navigator.of(context).pop();
             },
             child: const Text('Kaydet'),
@@ -105,7 +105,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundColor: theme.dividerColor.withOpacity(0.2),
+                    backgroundColor: theme.dividerColor.withValues(alpha: 0.2),
                     backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
                         ? NetworkImage(avatarUrl)
                         : null,
@@ -224,7 +224,9 @@ class _LabeledField extends StatelessWidget {
             readOnly: readOnly,
             decoration: InputDecoration(
               filled: true,
-              fillColor: colorScheme.surfaceVariant.withOpacity(0.4),
+              fillColor: colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.4,
+              ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 14,
