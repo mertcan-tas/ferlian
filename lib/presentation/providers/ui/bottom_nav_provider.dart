@@ -10,9 +10,11 @@ class BottomNavProvider with ChangeNotifier {
 
   int get currentIndex => _controller.index;
 
-  void onItemTapped(int index) {
-    if (index == _controller.index) return;
+  void setIndex(int index) {
+    if (_controller.index == index) return;
     _controller.index = index;
     notifyListeners();
   }
+
+  void onItemTapped(int index) => setIndex(index);
 }

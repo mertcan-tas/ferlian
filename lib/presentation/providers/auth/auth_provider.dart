@@ -48,7 +48,11 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> signIn({required String email, required String password}) async {
     return _guardedAction(() async {
-      await _client.auth.signInWithPassword(email: email, password: password);
+      final response = await _client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      _applySession(response.session);
     });
   }
 
@@ -58,18 +62,21 @@ class AuthProvider with ChangeNotifier {
     String? fullName,
   }) async {
     return _guardedAction(() async {
-      await _client.auth.signUp(
+      final response = await _client.auth.signUp(
         email: email,
         password: password,
         data: fullName != null && fullName.isNotEmpty
             ? {'full_name': fullName}
             : null,
       );
+      _applySession(response.session);
     });
   }
 
   Future<void> signOut() async {
     await _client.auth.signOut();
+    _applySession(null);
+    notifyListeners();
   }
 
   Future<bool> _guardedAction(Future<void> Function() action) async {
@@ -107,6 +114,14 @@ class AuthProvider with ChangeNotifier {
 
     _setBusy(false);
     return false;
+  }
+
+  void _applySession(Session? session) {
+    _session = session;
+    _status = session != null
+        ? AuthStatus.authenticated
+        : AuthStatus.unauthenticated;
+    notifyListeners();
   }
 
   void _setBusy(bool value) {

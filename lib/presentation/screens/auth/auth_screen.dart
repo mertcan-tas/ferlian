@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/auth/auth_provider.dart';
+import '../../providers/ui/bottom_nav_provider.dart';
 import 'widgets/login_form.dart';
 import 'widgets/register_form.dart';
 
@@ -16,6 +19,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   late bool _showLogin;
+  bool _hasHandledAuthNavigation = false;
 
   @override
   void initState() {
@@ -33,6 +37,19 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final auth = context.watch<AuthProvider>();
+    final bottomNav = context.read<BottomNavProvider>();
+
+    if (auth.isAuthenticated && !_hasHandledAuthNavigation) {
+      _hasHandledAuthNavigation = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        bottomNav.setIndex(0);
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      });
+    } else if (!auth.isAuthenticated && _hasHandledAuthNavigation) {
+      _hasHandledAuthNavigation = false;
+    }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
