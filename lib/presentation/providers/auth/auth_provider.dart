@@ -3,11 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-enum AuthStatus {
-  unknown,
-  authenticated,
-  unauthenticated,
-}
+enum AuthStatus { unknown, authenticated, unauthenticated }
 
 class AuthProvider with ChangeNotifier {
   AuthProvider(this._client) {
@@ -35,21 +31,22 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> _init() async {
     _session = _client.auth.currentSession;
-    _status = _session != null ? AuthStatus.authenticated : AuthStatus.unauthenticated;
+    _status = _session != null
+        ? AuthStatus.authenticated
+        : AuthStatus.unauthenticated;
     notifyListeners();
 
     _authSubscription = _client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
       _session = session;
-      _status = session != null ? AuthStatus.authenticated : AuthStatus.unauthenticated;
+      _status = session != null
+          ? AuthStatus.authenticated
+          : AuthStatus.unauthenticated;
       notifyListeners();
     });
   }
 
-  Future<bool> signIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<bool> signIn({required String email, required String password}) async {
     return _guardedAction(() async {
       await _client.auth.signInWithPassword(email: email, password: password);
     });
@@ -79,16 +76,36 @@ class AuthProvider with ChangeNotifier {
     if (_isBusy) return false;
     _setBusy(true);
     _setError(null);
-    try {
-      await action();
-      return true;
-    } on AuthException catch (error) {
-      _setError(error.message);
-    } catch (error) {
-      _setError(error.toString());
-    } finally {
-      _setBusy(false);
+
+    const maxAttempts = 3;
+    var attempt = 0;
+    var shouldContinue = true;
+
+    while (shouldContinue && attempt < maxAttempts) {
+      try {
+        await action();
+        _setBusy(false);
+        return true;
+      } on AuthRetryableFetchException catch (_) {
+        attempt += 1;
+        if (attempt >= maxAttempts) {
+          _setError(
+            'Sunucuya ulaşılamadı. Lütfen bağlantını kontrol edip tekrar dene.',
+          );
+          shouldContinue = false;
+        } else {
+          await Future<void>.delayed(Duration(milliseconds: 400 * attempt));
+        }
+      } on AuthException catch (error) {
+        _setError(error.message);
+        shouldContinue = false;
+      } catch (error) {
+        _setError(error.toString());
+        shouldContinue = false;
+      }
     }
+
+    _setBusy(false);
     return false;
   }
 
