@@ -107,6 +107,41 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> updateProfile({String? fullName}) async {
+    final trimmedName = fullName?.trim();
+    final updates = <String, dynamic>{};
+    if (trimmedName != null && trimmedName.isNotEmpty) {
+      updates['full_name'] = trimmedName;
+    } else if (trimmedName != null && trimmedName.isEmpty) {
+      updates['full_name'] = null;
+    }
+
+    if (updates.isEmpty) {
+      return Future<bool>.value(true);
+    }
+
+    return _guardedAction(() async {
+      final response = await _client.auth.updateUser(
+        UserAttributes(data: updates),
+      );
+      final updatedUser = response.user;
+
+      Session? refreshedSession = _client.auth.currentSession;
+      if (refreshedSession != null) {
+        if (updatedUser != null) {
+          refreshedSession = refreshedSession.copyWith(user: updatedUser);
+        }
+        _applySession(refreshedSession);
+        return;
+      }
+
+      if (updatedUser != null) {
+        _cacheProfileFromUser(updatedUser);
+        notifyListeners();
+      }
+    });
+  }
+
   Future<bool> _guardedAction(Future<void> Function() action) async {
     if (_isBusy) return false;
     _setBusy(true);
@@ -177,7 +212,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   void _cacheSessionProfile(Session session) {
-    final user = session.user;
+    _cacheProfileFromUser(session.user);
+  }
+
+  void _cacheProfileFromUser(User user) {
     final email = user.email;
     if (email == null || email.isEmpty) return;
     final metadata = user.userMetadata ?? <String, dynamic>{};

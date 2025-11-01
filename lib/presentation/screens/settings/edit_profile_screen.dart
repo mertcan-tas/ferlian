@@ -86,21 +86,54 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () async {
-              final navigator = Navigator.of(context);
-              final authProvider = context.read<AuthProvider>();
-              final name = _nameController.text.trim();
-              final email = _emailController.text.trim();
+            onPressed: auth.isBusy
+                ? null
+                : () async {
+                    final navigator = Navigator.of(context);
+                    final authProvider = context.read<AuthProvider>();
+                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+                    final name = _nameController.text;
+                    final trimmedName = name.trim();
 
-              await authProvider.updateCachedProfile(
-                fullName: name.isEmpty ? null : name,
-                email: email.isEmpty ? null : email,
-              );
+                    final existingName =
+                        auth.cachedProfile?.fullName?.trim() ?? '';
+                    if (trimmedName == existingName) {
+                      navigator.pop();
+                      return;
+                    }
 
-              if (!mounted) return;
-              navigator.pop();
-            },
-            child: const Text('Kaydet'),
+                    final success = await authProvider.updateProfile(
+                      fullName: trimmedName,
+                    );
+
+                    if (!mounted) return;
+
+                    if (success) {
+                      navigator.pop();
+                      scaffoldMessenger
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Text('Profil bilgilerin güncellendi.'),
+                          ),
+                        );
+                    } else {
+                      final message =
+                          authProvider.errorMessage ?? 'Güncelleme başarısız.';
+                      scaffoldMessenger
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(content: Text(message)),
+                        );
+                    }
+                  },
+            child: auth.isBusy
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Kaydet'),
           ),
         ],
       ),
